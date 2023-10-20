@@ -95,66 +95,6 @@ public class FileModelService {
         }
     }
 
-//    private void sendFileToRemoteServer(String filePath) {
-//        try {
-//            RestTemplate restTemplate = new RestTemplate();
-//
-//            // Prepare the authentication headers
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-//            headers.setBasicAuth("worxtrack", "worxtrack@123"); // Set your username and password
-//
-//            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-//            body.add("file", new ByteArrayResource(Files.readAllBytes(Paths.get(filePath))));
-//
-//            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-//
-//            // Construct the remote URL where you want to upload the file
-//            String remoteUploadURL = "https://worx4uedms.dpw.gov.za/public/file/Worxstation/WorxTrack"; // Replace with your actual URL
-//
-//            ResponseEntity<String> response = restTemplate.exchange(remoteUploadURL, HttpMethod.POST, requestEntity, String.class);
-//
-//            if (response.getStatusCode() == HttpStatus.OK) {
-//                // Handle success response
-//            } else {
-//                // Handle error response
-//            }
-//        } catch (HttpClientErrorException e) {
-//            // Handle HTTP client error
-//        } catch (Exception e) {
-//            // Handle other exceptions
-//        }
-//    }
-
-
-//    private void sendFileToRemoteServer(String filePath) {
-//        try {
-//            RestTemplate restTemplate = new RestTemplate();
-//
-//            // Prepare the authentication headers
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-//            headers.setBasicAuth("worxtrack", "worxtrack@123"); // Set your username and password
-//
-//            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-//            body.add("file", new ByteArrayResource(Files.readAllBytes(Paths.get(filePath))));
-//
-//            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-//
-//            ResponseEntity<String> response = restTemplate.exchange(fileUploadEndpoint, HttpMethod.POST, requestEntity, String.class);
-//
-//            if (response.getStatusCode() == HttpStatus.OK) {
-//                // Handle success response
-//            } else {
-//                // Handle error response
-//            }
-//        } catch (HttpClientErrorException e) {
-//            // Handle HTTP client error
-//        } catch (Exception e) {
-//            // Handle other exceptions
-//        }
-//    }
-
 
 
     public Optional<Path> getFile(String fileId) {
