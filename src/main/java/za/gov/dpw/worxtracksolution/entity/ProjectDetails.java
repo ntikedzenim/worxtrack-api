@@ -2,6 +2,8 @@ package za.gov.dpw.worxtracksolution.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.beans.factory.annotation.Autowired;
+import za.gov.dpw.worxtracksolution.service.ProgressNotificationService;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -10,7 +12,6 @@ import java.util.Date;
 
 @Entity
 public class ProjectDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
@@ -37,6 +38,7 @@ public class ProjectDetails {
     private String archived;
     private String completed;
     private String reason;
+
 
 
     public ProjectDetails() {

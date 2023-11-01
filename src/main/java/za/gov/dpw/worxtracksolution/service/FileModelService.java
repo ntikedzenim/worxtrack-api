@@ -72,28 +72,66 @@ public class FileModelService {
         }
     }
 
+
     private void sendFileToRemoteServer(String filePath) {
         try {
             RestTemplate restTemplate = new RestTemplate();
+
+            // Prepare the authentication headers
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+            headers.setBasicAuth("worxtrack", "worxtrack@123"); // Set your username and password
+
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
             body.add("file", new ByteArrayResource(Files.readAllBytes(Paths.get(filePath))));
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-            ResponseEntity<String> response = restTemplate.exchange(fileUploadEndpoint, HttpMethod.POST, requestEntity, String.class);
+            // Construct the remote URL where you want to upload the file
+            String remoteUploadURL = "https://worx4uedms.dpw.gov.za/public/file/Worxstation/WorxTrack"; // Replace with your actual URL
 
-            if (response.getStatusCode() != HttpStatus.OK) {
-                // Handle error response from the remote server
-                throw new FileSaveException("Failed to upload file to the remote server");
+            ResponseEntity<String> response = restTemplate.exchange(remoteUploadURL, HttpMethod.POST, requestEntity, String.class);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                // Handle success response
+            } else {
+                // Handle error response
             }
-        } catch (IOException e) {
-            // Handle exception
-            throw new FileSaveException("Failed to upload file to the remote server", e);
+        } catch (HttpClientErrorException e) {
+            // Handle HTTP client error
+        } catch (Exception e) {
+            // Handle other exceptions
         }
     }
+
+
+//    private void sendFileToRemoteServer(String filePath) {
+//        try {
+//            RestTemplate restTemplate = new RestTemplate();
+//
+//            // Prepare the authentication headers
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+//            headers.setBasicAuth("worxtrack", "worxtrack@123"); // Set your username and password
+//
+//            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+//            body.add("file", new ByteArrayResource(Files.readAllBytes(Paths.get(filePath))));
+//
+//            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+//
+//            ResponseEntity<String> response = restTemplate.exchange(fileUploadEndpoint, HttpMethod.POST, requestEntity, String.class);
+//
+//            if (response.getStatusCode() == HttpStatus.OK) {
+//                // Handle success response
+//            } else {
+//                // Handle error response
+//            }
+//        } catch (HttpClientErrorException e) {
+//            // Handle HTTP client error
+//        } catch (Exception e) {
+//            // Handle other exceptions
+//        }
+//    }
 
 
 
@@ -145,6 +183,62 @@ public class FileModelService {
 
         return documentContent;
     }
+
+// Upload Certificate
+
+//    public FileModel saveFile(MultipartFile file, String ptsRef, String projectTitle) {
+//        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+//        String appPath = (tmpDirectory + projectTitle);
+//        String tmpFilePath = appPath + File.separator + filename;
+//
+//        try {
+//            // Create the directory if it doesn't exist
+//            Path directoryPath = Paths.get(appPath);
+//            if (!Files.exists(directoryPath)) {
+//                Files.createDirectories(directoryPath);
+//            }
+//
+//            // Save the file to the temporary directory
+//            Files.copy(file.getInputStream(), Paths.get(tmpFilePath), StandardCopyOption.REPLACE_EXISTING);
+//
+//            // Send the file to the remote server
+//            sendFileToRemoteServer(file);
+//
+//            FileModel model = new FileModel(projectTitle, filename, file.getContentType(), null, ptsRef);
+//            try {
+//                return fileModelRepository.save(model);
+//            } catch (DataIntegrityViolationException e) {
+//                // Handle the conflict when saving to the database
+//                throw new FileSaveException(FileErrors.FILE_ALREADY_EXISTS, e);
+//            }
+//        } catch (IOException e) {
+//            // Handle the error when saving the file
+//            throw new FileSaveException(FileErrors.FILE_NOT_STORED, e);
+//        }
+//    }
+//
+//    private void sendFileToRemoteServer(MultipartFile file) {
+//        try {
+//            RestTemplate restTemplate = new RestTemplate();
+//            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+//            body.add("file", new ByteArrayResource(file.getBytes()));
+//
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+//
+//            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+//
+//            ResponseEntity<String> response = restTemplate.exchange(fileUploadEndpoint, HttpMethod.POST, requestEntity, String.class);
+//
+//            if (response.getStatusCode() != HttpStatus.OK) {
+//                // Handle error response from the remote server
+//                throw new FileSaveException("Failed to upload file to the remote server");
+//            }
+//        } catch (IOException e) {
+//            // Handle IOException
+//            throw new FileSaveException("Failed to read the file or upload it to the remote server", e);
+//        }
+//    }
 
 
 }
