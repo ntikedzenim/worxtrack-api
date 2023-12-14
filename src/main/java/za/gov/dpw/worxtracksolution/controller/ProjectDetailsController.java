@@ -1,6 +1,7 @@
 package za.gov.dpw.worxtracksolution.controller;
 
 
+import org.springframework.dao.DataIntegrityViolationException;
 import za.gov.dpw.worxtracksolution.dao.ProjectDetailsRepository;
 import za.gov.dpw.worxtracksolution.entity.ADdetails;
 import za.gov.dpw.worxtracksolution.entity.ActAsAD;
@@ -43,31 +44,61 @@ public class ProjectDetailsController {
     private ActAsAdService actAsAdService;
 
 //    @PreAuthorize("hasRole('Project_Manager')")
+//    @PostMapping("/addProject")
+//    public ResponseEntity<ProjectDetails> saveProject(@RequestBody ProjectDetails projectDetails) {
+//
+//        // Set the reference number
+//        ProjectDetails latestProject = projectDetailsRepository.findTopByOrderByIdDesc();
+//        Long latestId = latestProject != null ? latestProject.getId() : 0;
+//        String latestIdStr = String.valueOf(latestId);
+//
+//        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//        String referenceNumber = String.format("PTS-%s-%d", date, latestId + 1);
+//        projectDetails.setPtsRef(referenceNumber);
+//
+//        // Set the status field to "Waiting For Business Case"
+//        projectDetails.setStatus("Waiting for Business Case");
+//
+//        // Set archived to false for new projects
+//        projectDetails.setArchived("false");
+//        projectDetails.setCompleted("unfulfilled");
+//
+//        ProjectDetails savedProjectDetails = projectDetailsService.saveProject(projectDetails);
+//
+//        return ResponseEntity.status(HttpStatus.CREATED).body(savedProjectDetails);
+//    }
+
     @PostMapping("/addProject")
-    public ResponseEntity<ProjectDetails> saveProject(@RequestBody ProjectDetails projectDetails) {
+    public ResponseEntity<?> saveProject(@RequestBody ProjectDetails projectDetails) {
+        try {
+            // Set the reference number
+            ProjectDetails latestProject = projectDetailsRepository.findTopByOrderByIdDesc();
+            Long latestId = latestProject != null ? latestProject.getId() : 0;
+            String latestIdStr = String.valueOf(latestId);
 
-        // Set the reference number
-        ProjectDetails latestProject = projectDetailsRepository.findTopByOrderByIdDesc();
-        Long latestId = latestProject != null ? latestProject.getId() : 0;
-        String latestIdStr = String.valueOf(latestId);
+            String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String referenceNumber = String.format("PTS-%s-%d", date, latestId + 1);
+            projectDetails.setPtsRef(referenceNumber);
 
-        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        String referenceNumber = String.format("PTS-%s-%d", date, latestId + 1);
-        projectDetails.setPtsRef(referenceNumber);
+            // Set the status field to "Waiting For Business Case"
+            projectDetails.setStatus("Waiting for Business Case");
 
-        // Set the status field to "Waiting For Business Case"
-        projectDetails.setStatus("Waiting for Business Case");
+            // Set archived to false for new projects
+            projectDetails.setArchived("false");
+            projectDetails.setCompleted("unfulfilled");
 
-        // Set archived to false for new projects
-        projectDetails.setArchived("false");
-        projectDetails.setCompleted("unfulfilled");
+            ProjectDetails savedProjectDetails = projectDetailsService.saveProject(projectDetails);
 
-        ProjectDetails savedProjectDetails = projectDetailsService.saveProject(projectDetails);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedProjectDetails);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedProjectDetails);
+        } catch (DataIntegrityViolationException ex) {
+            // Return a user-friendly error message
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Project with the same title already exists.");
+        }
     }
 
-//    @PreAuthorize("hasRole('Project_Manager')")
+
+
+    //    @PreAuthorize("hasRole('Project_Manager')")
     @GetMapping("/getProjectsByCurrentUser/{projectManagerEmail}")
     public List<ProjectDetails> getProjectsByCurrentUser(@PathVariable String projectManagerEmail) {
 

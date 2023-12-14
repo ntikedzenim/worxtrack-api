@@ -3,6 +3,7 @@ package za.gov.dpw.worxtracksolution.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
+import za.gov.dpw.worxtracksolution.projectTitle.UniqueProjectTitle;
 import za.gov.dpw.worxtracksolution.service.ProgressNotificationService;
 
 import javax.persistence.*;
@@ -11,13 +12,20 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"projectTitle"})
+})
 public class ProjectDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
-
+//    @UniqueProjectTitle
+    @Column(nullable = false)
     private String projectTitle;
+
+//    @Column(nullable = false)
+//    private int yearRange;
     private String projectDescription;
     private String estimatedValue;
     private String startDate;

@@ -43,7 +43,7 @@ public class FileModelService {
 
     public FileModel saveFile(MultipartFile file, String ptsRef, String projectTitle) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        String appPath = (tmpDirectory + projectTitle);
+        String appPath = (tmpDirectory + ptsRef);
         String tmpFilePath = appPath + File.separator + filename;
 
         try {
@@ -245,3 +245,37 @@ public class FileModelService {
 
 
 
+//    private void sendFileToRemoteServer(MultipartFile file) {
+//        try {
+//            // Define the file upload URL
+//            String fileUploadEndpoint = "https://worx4uedms.dpw.gov.za/public/file/Worxstation/WorxTrack";
+//
+//            // Set up HTTP Basic Authentication credentials
+//            String username = "worxtrack";
+//            String password = "worxtrack@123";
+//
+//            RestTemplate restTemplate = new RestTemplate();
+//
+//            // Create a MultiValueMap to hold the file
+//            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+//            body.add("file", new ByteArrayResource(file.getBytes()));
+//
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+//
+//            // Add Basic Authentication credentials to the headers
+//            headers.setBasicAuth(username, password);
+//
+//            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+//
+//            ResponseEntity<String> response = restTemplate.exchange(fileUploadEndpoint, HttpMethod.POST, requestEntity, String.class);
+//
+//            if (response.getStatusCode() != HttpStatus.OK) {
+//                // Handle error response from the remote server
+//                throw new FileSaveException("Failed to upload file to the remote server");
+//            }
+//        } catch (IOException e) {
+//            // Handle IOException
+//            throw new FileSaveException("Failed to read the file or upload it to the remote server", e);
+//        }
+//    }

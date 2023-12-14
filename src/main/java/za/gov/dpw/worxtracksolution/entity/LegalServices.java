@@ -15,6 +15,7 @@ public class LegalServices {
     private String legalServicesStatus;
     private String legalServicesDate;
     private String ptsRef;
+    private String projectTitle;
     private String remarks;
 
     public LegalServices() {
@@ -50,6 +51,14 @@ public class LegalServices {
 
     public void setPtsRef(String ptsRef) {
         this.ptsRef = ptsRef;
+    }
+
+    public String getProjectTitle() {
+        return projectTitle;
+    }
+
+    public void setProjectTitle(String projectTitle) {
+        this.projectTitle = projectTitle;
     }
 
     public String getRemarks() {
